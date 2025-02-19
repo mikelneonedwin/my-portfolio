@@ -1,6 +1,10 @@
 import type { KvMapper } from "@/types/db";
 import { Redis } from "@upstash/redis";
 
+type MgetReturn<T, K extends (keyof T)[]> = {
+  [I in keyof K]: T[K[I]] | null;
+};
+
 const redis = new Redis({
   url: process.env.KV_REST_API_URL,
   token: process.env.KV_REST_API_TOKEN,
@@ -14,19 +18,16 @@ export const kv = {
     const data = await redis.get(key);
     return data as KvMapper[T] | null;
   },
-  async getAll<T extends keyof KvMapper>(...keys: T[]) {
-    const data: Partial<Pick<KvMapper, T>> = {};
-
-    await Promise.all(
-      keys.map(async (key) => {
-        const val = await this.get(key);
-        data[key] = val ?? undefined;
-      })
-    );
-
-    return data;
+  async getAll<K extends (keyof KvMapper)[]>(
+    ...keys: K
+  ): Promise<MgetReturn<KvMapper, K>> {
+    const data = await redis.mget(...keys);
+    return data as MgetReturn<KvMapper, K>;
   },
   async del(key: string) {
     await redis.del(key);
+  },
+  async setAll(data: Partial<KvMapper>) {
+    await redis.mset(data);
   },
 };

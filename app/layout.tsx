@@ -1,14 +1,14 @@
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from "@/context/auth";
 import { ThemeProvider } from "@/context/theme-provider";
-import { getImage, getJob, getName, getTwitterUsername } from "@/data";
+import { kv } from "@/lib/redis";
+import { getSite } from "@/utils/shared";
 import { Analytics } from "@vercel/analytics/react";
 import clsx from "clsx";
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import NextjsTopLoader from "nextjs-toploader";
 import "./globals.css";
-import { getSite } from "@/utils/shared";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const poppins = Poppins({
@@ -18,10 +18,8 @@ const poppins = Poppins({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const name = await getName();
-  const image = await getImage();
-  const job = await getJob();
-  const twitterUsername = await getTwitterUsername();
+  const [ name, image, job ] = await kv.getAll("name", "image", "job");
+  const twitterUsername = null; //await getTwitterUsername();
   const siteName = name ? `${name} - Portfolio` : "Portfolio";
   return {
     title: {

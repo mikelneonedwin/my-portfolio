@@ -6,7 +6,7 @@ import Link from "next/link";
 export async function Footer() {
   const remotes = await git.getRemotes(true);
   const origin = remotes.find((remote) => remote.name === "origin");
-  const { name, email } = await kv.getAll("name", "email");
+  const [name, email] = await kv.getAll("name", "email");
   return (
     <footer className="border-t">
       <div className="container flex flex-col items-center justify-between gap-4 py-10 md:h-24 md:flex-row md:py-0">

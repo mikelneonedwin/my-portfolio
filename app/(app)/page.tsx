@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default async function Home() {
-  const { prefix, name, suffix, image, bio } = await kv.getAll(
+  const [ prefix, name, suffix, image, bio ] = await kv.getAll(
     "prefix",
     "suffix",
     "name",

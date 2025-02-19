@@ -2,9 +2,10 @@
 
 import { HAS_SESSION_COOKIE, SESSION_COOKIE } from "@/constants";
 import { adminAuth } from "@/lib/firebase-admin";
+import { kv } from "@/lib/redis";
 import { idTokenSchema } from "@/schemas";
-import { isAdminEmail } from "@/utils/server";
 import { getErrorMessage } from "@/utils/shared";
+import { waitUntil } from "@vercel/functions";
 import { cookies } from "next/headers";
 import { randomUUID } from "node:crypto";
 
@@ -14,8 +15,9 @@ export async function createSession(idToken: string): Promise<string | null> {
     idTokenSchema.parse(idToken);
     const expiresIn = 60 * 60;
     const { email, uid } = await adminAuth.verifyIdToken(idToken);
-    if (!(await isAdminEmail(email))) {
-      void adminAuth.deleteUser(uid);
+    const myEmail = await kv.get("email");
+    if (myEmail !== email) {
+      waitUntil(adminAuth.deleteUser(uid));
       throw new Error("Unauthorized!]");
     }
     const sessionCookie = await adminAuth.createSessionCookie(idToken, {
