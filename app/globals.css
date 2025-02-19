@@ -83,3 +83,6 @@ body {
   border-radius: 9999px;
 }
 
+/* * {
+  @apply border border-solid border-red-500
+} */

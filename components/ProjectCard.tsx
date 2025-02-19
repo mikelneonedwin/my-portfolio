@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -97,7 +98,7 @@ export function ProjectCard({ project }: { project: Project }) {
               ))}
             </div>
           </div>
-          <div className="flex gap-4">
+          <div className="flex gap-2">
             {project.liveUrl && (
               <Button asChild>
                 <a
@@ -121,12 +122,15 @@ export function ProjectCard({ project }: { project: Project }) {
               </Button>
             )}
             {user && (
-              <Button asChild variant="outline" size="sm">
+              <Button asChild variant="outline">
                 <Link prefetch href={`/projects/${project.slug}/edit`}>
                   Edit
                 </Link>
               </Button>
             )}
+            <DialogClose asChild>
+              <Button variant="outline">Close</Button>
+            </DialogClose>
           </div>
         </div>
       </DialogContent>

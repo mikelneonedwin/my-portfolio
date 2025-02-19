@@ -3,6 +3,8 @@
 import { HAS_SESSION_COOKIE, SESSION_COOKIE } from "@/constants";
 import { adminAuth } from "@/lib/firebase-admin";
 import { idTokenSchema } from "@/schemas";
+import { isAdminEmail } from "@/utils/server";
+import { getErrorMessage } from "@/utils/shared";
 import { cookies } from "next/headers";
 import { randomUUID } from "node:crypto";
 
@@ -11,6 +13,11 @@ export async function createSession(idToken: string): Promise<string | null> {
   try {
     idTokenSchema.parse(idToken);
     const expiresIn = 60 * 60;
+    const { email, uid } = await adminAuth.verifyIdToken(idToken);
+    if (!(await isAdminEmail(email))) {
+      void adminAuth.deleteUser(uid);
+      throw new Error("Unauthorized!]");
+    }
     const sessionCookie = await adminAuth.createSessionCookie(idToken, {
       expiresIn: expiresIn * 1000,
     });
@@ -33,10 +40,9 @@ export async function createSession(idToken: string): Promise<string | null> {
     });
     return null;
   } catch (err) {
-    // TODO log to rollbar
     // eslint-disable-next-line no-console
     console.error("Error creating session:", err);
-    return "Internal server error";
+    return getErrorMessage(err);
   }
 }
 

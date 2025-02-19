@@ -1,36 +1,68 @@
 "use server";
 
-import { addSocial, removeSocial } from "@/data/admin";
+import { addSocial, patchSocial, removeSocial } from "@/data";
+import {
+  idTokenSchema,
+  platformSchema,
+  socialIdSchema,
+  socialUrlSchema,
+} from "@/schemas";
 import { authorize } from "@/utils/server";
+import { getErrorMessage } from "@/utils/shared";
 import { z } from "zod";
 
-export const createSocial = async (
-  key: SocialPlatforms,
-  value: string,
-  token: string
-) => {
+const createSocialSchema = z.object({
+  platform: platformSchema,
+  token: idTokenSchema,
+  url: socialUrlSchema,
+});
+
+export async function createSocial(data: z.infer<typeof createSocialSchema>) {
   try {
-    z.string().parse(token);
-    z.string().url().or(z.string().email()).or(z.string().min(11)).parse(value);
-    z.string().parse(key);
-    await authorize(token);
-    addSocial(key, value);
+    await createSocialSchema.parseAsync(data);
+    await authorize(data.token);
+    return await addSocial(data.platform, data.url);
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error("Error creating social:", err);
-    return "Sorry, an error occured";
+    return getErrorMessage(err);
   }
-};
+}
 
-export const deleteSocial = async (key: SocialPlatforms, token: string) => {
+const deleteSocialSchema = z.object({
+  id: socialIdSchema,
+  token: idTokenSchema,
+});
+
+export async function deleteSocial(data: z.infer<typeof deleteSocialSchema>) {
   try {
-    z.string().min(1).parse(key);
-    z.string().min(1).parse(token);
-    await authorize(token);
-    removeSocial(key);
+    await deleteSocialSchema.parseAsync(data);
+    await authorize(data.token);
+    await removeSocial(data.id);
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error("Error while deleting social", err);
-    return "Sorry, an error occured";
+    return getErrorMessage(err);
   }
-};
+}
+
+const updateSocialSchema = z.object({
+  token: idTokenSchema,
+  id: socialIdSchema,
+  data: z.object({
+    name: platformSchema,
+    url: socialUrlSchema,
+  }),
+});
+
+export async function updateSocial(data: z.infer<typeof updateSocialSchema>) {
+  try {
+    await updateSocialSchema.parseAsync(data);
+    await authorize(data.token);
+    await patchSocial(data.id, data.data);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error("Error updating socials:", error);
+    return getErrorMessage(error);
+  }
+}

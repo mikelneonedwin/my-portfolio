@@ -13,6 +13,7 @@ import {
   signOut,
 } from "firebase/auth";
 import cookies from "js-cookie";
+import { useRouter } from "next/navigation";
 import type React from "react";
 import {
   createContext,
@@ -51,6 +52,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [user, setUser] = useState<User | null>(null);
   const [state, setState] = useState(AuthState.Loading);
+  const router = useRouter();
 
   const getIdToken = useCallback(() => {
     if (!user) throw new Error("No user logged in");
@@ -64,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // auto generate a session
   useEffect(() => {
     if (!user || cookies.get(HAS_SESSION_COOKIE)) return;
-    getIdToken().then(createSession);
+    void getIdToken().then(createSession);
   }, [user, getIdToken]);
 
   useEffect(() => {
@@ -90,6 +92,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         throw error;
       }
       setUser(result.user);
+      // TODO push to dashboard
+      router.push("/")
     } catch (error) {
       // eslint-disable-next-line no-console
       console.error("Error signing in:", error);

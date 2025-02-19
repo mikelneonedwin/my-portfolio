@@ -1,10 +1,13 @@
-import { getAllowedEmails } from "@/data/admin";
+import { getLoginEmails } from "@/data";
 import { adminAuth } from "@/lib/firebase-admin";
-import { unauthorized } from "next/navigation";
+
+export async function isAdminEmail(email?: string | null) {
+  const allowedEmails = await getLoginEmails();
+  return email && allowedEmails.includes(email);
+}
 
 export async function authorize(idToken: string) {
   const { email } = await adminAuth.verifyIdToken(idToken);
-  const allowedEmails = await getAllowedEmails();
-  if (email && allowedEmails.includes(email)) return;
-  unauthorized();
+  const isAllowed = await isAdminEmail(email);
+  if (!isAllowed) throw new Error("Unauthorized!");
 }

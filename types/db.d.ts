@@ -1,64 +1,75 @@
-interface Project {
-  title: string;
-  id: string;
-  description: string;
-  tools: string[];
-  year: number;
-  media: {
-    type: "image" | "video" | "link";
-    url: string;
-  };
-  liveUrl?: string;
-  githubUrl?: string;
-  company?: string;
-  slug: string;
-  featured?: boolean;
-  images?: string[];
+import type {
+    Generated,
+    Insertable,
+    JSONColumnType,
+    Selectable,
+    Updateable,
+} from "kysely";
+
+interface SkillsTable {
+  id: Generated<number>;
+  name: string;
+  icon_url: string | null;
 }
 
-interface Admin {
+export type NewSkill = Insertable<SkillsTable>;
+export type Skill = Selectable<SkillsTable>;
+export type UpdateSkill = Updateable<SkillsTable>;
+
+export type OnlinePlatform = typeof import("@/constants")["PLATFORMS"][number] | (string & {});
+
+interface SocialsTable {
+  id: Generated<number>;
+  name: OnlinePlatform;
+  url: string;
+}
+
+export type Social = Selectable<SocialsTable>;
+export type NewSocial = Insertable<SocialsTable>;
+export type UpdateSocial = Updateable<SocialsTable>;
+
+interface ProjectsTable {
+  id: Generated<string>;
+  title: string;
+  description: string;
+  tools: JSONColumnType<string[]>;
+  year: number;
+  media: {
+    type: "image" | "video" | "external";
+    url: string;
+  } | null;
+  live_url: string | null;
+  github_url: string | null;
+  company: string | null;
+  slug: string;
+  featured: boolean;
+}
+
+export type Project = Selectable<ProjectsTable>;
+export type NewProject = Insertable<ProjectsTable>;
+export type UpdateProject = Updateable<ProjectsTable>;
+
+interface ImagesTable {
+  id: Generated<number>;
+  project_id: string;
+  url: string;
+}
+
+export interface Database {
+  skills: SkillsTable;
+  socials: SocialsTable;
+  projects: ProjectsTable;
+  images: ImagesTable;
+}
+
+export interface KvMapper {
   name: string;
   email: string;
   phone: string;
-  title?: string;
-  images: string[];
-  avatar: string;
-  allowedEmails: string[];
+  prefix: string;
+  suffix: string;
+  image: string;
+  dob: `${number}-${number}-${number}`;
   job: string;
   bio: string;
-  skills: Array<{
-    name: string;
-    icon: string;
-  }>;
-  socials: Partial<Record<SocialPlatforms, string>>;
 }
-
-type SocialPlatforms =
-  | "WhatsApp"
-  | "GitHub"
-  | "Facebook"
-  | "TikTok"
-  | "Website"
-  | "YouTube"
-  | "LinkedIn"
-  | "Tumblr"
-  | "X"
-  | "Instagram"
-  | "snapchat"
-  | "Telegram"
-  | "Pinterest"
-  | "Reddit"
-  | "Twitter"
-  | "Discord"
-  | "Slack"
-  | "Twitch"
-  | "Spotify"
-  | "SoundCloud"
-  | "Medium"
-  | "Dev To"
-  | "Stack Overflow"
-  | "Dribbble"
-  | "Audiomack"
-  | "Email"
-  | "Snapchat"
-  | "Phone";

@@ -1,11 +1,14 @@
+import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from "@/context/auth";
 import { ThemeProvider } from "@/context/theme-provider";
-import { getAdminData } from "@/data/admin";
+import { getImage, getJob, getName, getTwitterUsername } from "@/data";
 import { Analytics } from "@vercel/analytics/react";
+import clsx from "clsx";
 import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import NextjsTopLoader from "nextjs-toploader";
 import "./globals.css";
+import { getSite } from "@/utils/shared";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const poppins = Poppins({
@@ -15,33 +18,40 @@ const poppins = Poppins({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const adminData = await getAdminData();
-  const name = adminData.name || "Your Name";
+  const name = await getName();
+  const image = await getImage();
+  const job = await getJob();
+  const twitterUsername = await getTwitterUsername();
+  const siteName = name ? `${name} - Portfolio` : "Portfolio";
   return {
     title: {
-      default: `${name} - Portfolio`,
-      template: `%s | ${name}`,
+      default: siteName,
+      template: name ? `%s | ${name}` : "",
     },
-    description: "A showcase of my work and skills as a full-stack developer",
+    description: clsx("A showcase of my work and skills", job && `as a ${job}`),
     openGraph: {
       type: "website",
       locale: "en_US",
-      url: "https://yourportfolio.com",
-      siteName: `${name} - Portfolio`,
-      images: [
-        {
-          url: "https://yourportfolio.com/og-image.jpg",
-          width: 1200,
-          height: 630,
-          alt: `${name} - Portfolio`,
-        },
-      ],
+      url: getSite(),
+      siteName,
+      images: image
+        ? [
+            {
+              url: image,
+              width: 1200,
+              height: 630,
+              alt: siteName,
+            },
+          ]
+        : [],
     },
-    twitter: {
-      card: "summary_large_image",
-      site: "@yourtwitterhandle",
-      creator: "@yourtwitterhandle",
-    },
+    twitter: twitterUsername
+      ? {
+          card: "summary_large_image",
+          site: `@${twitterUsername}`,
+          creator: `@${twitterUsername}`,
+        }
+      : null,
   };
 }
 
@@ -67,6 +77,7 @@ export default function RootLayout({
             </ThemeProvider>
           </AuthProvider>
           <Analytics />
+          <Toaster />
         </body>
       </html>
     </>

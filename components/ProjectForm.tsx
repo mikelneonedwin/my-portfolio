@@ -15,10 +15,10 @@ import { Checkbox } from "./ui/checkbox";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
+  FormMessage
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
@@ -59,7 +59,7 @@ export function ProjectForm({ project }: { project?: Project }) {
         <FormField
           control={form.control}
           name="title"
-          render={({ field, fieldState }) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Title</FormLabel>
               <FormControl>
@@ -69,18 +69,14 @@ export function ProjectForm({ project }: { project?: Project }) {
                   required
                 />
               </FormControl>
-              {fieldState.error && (
-                <FormDescription className="text-red-600">
-                  {fieldState.error.message}
-                </FormDescription>
-              )}
+              <FormMessage />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
           name="description"
-          render={({ field, fieldState }) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Description</FormLabel>
               <FormControl>
@@ -91,18 +87,14 @@ export function ProjectForm({ project }: { project?: Project }) {
                   maxLength={1000}
                 />
               </FormControl>
-              {fieldState.error && (
-                <FormDescription className="text-red-600">
-                  {fieldState.error.message}
-                </FormDescription>
-              )}
+              <FormMessage />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
           name="slug"
-          render={({ field, fieldState }) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Slug</FormLabel>
               <FormControl>
@@ -112,11 +104,7 @@ export function ProjectForm({ project }: { project?: Project }) {
                   required
                 />
               </FormControl>
-              {fieldState.error && (
-                <FormDescription className="text-red-600">
-                  {fieldState.error.message}
-                </FormDescription>
-              )}
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -132,18 +120,14 @@ export function ProjectForm({ project }: { project?: Project }) {
                   {...field}
                 />
               </FormControl>
-              {fieldState.error && (
-                <FormDescription className="text-red-600">
-                  {fieldState.error.message}
-                </FormDescription>
-              )}
+<FormMessage/>
             </FormItem>
           )}
         /> */}
         <FormField
           control={form.control}
           name="liveUrl"
-          render={({ field, fieldState }) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Live URL</FormLabel>
               <FormControl>
@@ -152,18 +136,14 @@ export function ProjectForm({ project }: { project?: Project }) {
                   {...field}
                 />
               </FormControl>
-              {fieldState.error && (
-                <FormDescription className="text-red-600">
-                  {fieldState.error.message}
-                </FormDescription>
-              )}
+              <FormMessage />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
           name="githubUrl"
-          render={({ field, fieldState }) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>GitHub URL</FormLabel>
               <FormControl>
@@ -172,18 +152,14 @@ export function ProjectForm({ project }: { project?: Project }) {
                   {...field}
                 />
               </FormControl>
-              {fieldState.error && (
-                <FormDescription className="text-red-600">
-                  {fieldState.error.message}
-                </FormDescription>
-              )}
+              <FormMessage />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
           name="tools"
-          render={({ field, fieldState }) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Tools</FormLabel>
               <FormControl>
@@ -193,18 +169,14 @@ export function ProjectForm({ project }: { project?: Project }) {
                   required
                 />
               </FormControl>
-              {fieldState.error && (
-                <FormDescription className="text-red-600">
-                  {fieldState.error.message}
-                </FormDescription>
-              )}
+              <FormMessage />
             </FormItem>
           )}
         />
         <FormField
           control={form.control}
           name="year"
-          render={({ field, fieldState }) => (
+          render={({ field }) => (
             <FormItem>
               <FormLabel>Year</FormLabel>
               <FormControl>
@@ -215,11 +187,7 @@ export function ProjectForm({ project }: { project?: Project }) {
                   type="number"
                 />
               </FormControl>
-              {fieldState.error && (
-                <FormDescription className="text-red-600">
-                  {fieldState.error.message}
-                </FormDescription>
-              )}
+              <FormMessage />
             </FormItem>
           )}
         />

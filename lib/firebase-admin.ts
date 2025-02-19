@@ -25,5 +25,6 @@ const adminAuth = getAuth(app);
 const adminDb = getFirestore(app);
 const adminStorage = getStorage(app);
 const adminKv = getDatabase(app);
+const kvRef = (path: DbPaths) => adminKv.ref(path);
 
-export { adminAuth, adminDb, adminKv, adminStorage };
+export { adminAuth, adminDb, adminKv, adminStorage, kvRef };
