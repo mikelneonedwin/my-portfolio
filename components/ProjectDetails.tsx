@@ -1,12 +1,13 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import type { FullProject } from "@/types/db";
 import Image from "next/image";
 import Link from "next/link";
 import { useAuth } from "../context/auth";
 import ProjectMedia from "./ProjectMedia";
 
-export function ProjectDetails({ project }: { project: Project }) {
+export function ProjectDetails({ project }: { project: FullProject }) {
   const { user } = useAuth();
   return (
     <div className="max-w-3xl mx-auto">
@@ -44,17 +45,21 @@ export function ProjectDetails({ project }: { project: Project }) {
         </div>
       </div>
       <div className="flex gap-4 mb-8">
-        {project.liveUrl && (
+        {project.live_url && (
           <Button asChild>
-            <a href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+            <a
+              href={project.live_url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               Live Preview
             </a>
           </Button>
         )}
-        {project.githubUrl && (
+        {project.github_url && (
           <Button asChild variant="outline">
             <a
-              href={project.githubUrl}
+              href={project.github_url}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -71,7 +76,7 @@ export function ProjectDetails({ project }: { project: Project }) {
               <Image
                 width={400}
                 key={index}
-                src={image}
+                src={image.url}
                 height={300}
                 className="rounded-lg shadow-md"
                 alt={`${project.title} - Image ${index + 1}`}

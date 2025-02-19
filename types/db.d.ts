@@ -1,9 +1,9 @@
 import type {
-    Generated,
-    Insertable,
-    JSONColumnType,
-    Selectable,
-    Updateable,
+  Generated,
+  Insertable,
+  JSONColumnType,
+  Selectable,
+  Updateable,
 } from "kysely";
 
 interface SkillsTable {
@@ -16,7 +16,9 @@ export type NewSkill = Insertable<SkillsTable>;
 export type Skill = Selectable<SkillsTable>;
 export type UpdateSkill = Updateable<SkillsTable>;
 
-export type OnlinePlatform = typeof import("@/constants")["PLATFORMS"][number] | (string & {});
+export type OnlinePlatform =
+  | typeof import("@/constants")["PLATFORMS"][number]
+  | (string & {});
 
 interface SocialsTable {
   id: Generated<number>;
@@ -46,6 +48,9 @@ interface ProjectsTable {
 }
 
 export type Project = Selectable<ProjectsTable>;
+export type FullProject = Project & {
+  images: Array<Selectable<ImagesTable>>;
+};
 export type NewProject = Insertable<ProjectsTable>;
 export type UpdateProject = Updateable<ProjectsTable>;
 

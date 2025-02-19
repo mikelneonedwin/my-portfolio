@@ -1,13 +1,20 @@
 "use client";
 
-import { useForm, useFieldArray } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Button } from "@/components/ui/button";
-import { Trash, PlusCircle } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { PlusCircle, Trash } from "lucide-react";
+import { useFieldArray, useForm } from "react-hook-form";
+import { z } from "zod";
 
 // Zod schema for the setup form (KvMapper + socials + skills)
 const setupSchema = z.object({
@@ -17,21 +24,27 @@ const setupSchema = z.object({
   prefix: z.string().optional(),
   suffix: z.string().optional(),
   image: z.string().url("Must be a valid URL"),
-  dob: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "DOB must be in YYYY-MM-DD format"),
+  dob: z
+    .string()
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "DOB must be in YYYY-MM-DD format"),
   job: z.string().nonempty("Job is required"),
   bio: z.string().nonempty("Bio is required"),
-  socials: z.array(
-    z.object({
-      name: z.string().nonempty("Social name is required"),
-      url: z.string().url("Invalid URL"),
-    })
-  ).optional(),
-  skills: z.array(
-    z.object({
-      name: z.string().nonempty("Skill name is required"),
-      icon_url: z.string().url("Invalid URL").optional(),
-    })
-  ).optional(),
+  socials: z
+    .array(
+      z.object({
+        name: z.string().nonempty("Social name is required"),
+        url: z.string().url("Invalid URL"),
+      })
+    )
+    .optional(),
+  skills: z
+    .array(
+      z.object({
+        name: z.string().nonempty("Skill name is required"),
+        icon_url: z.string().url("Invalid URL").optional(),
+      })
+    )
+    .optional(),
 });
 
 type SetupFormData = z.infer<typeof setupSchema>;
@@ -55,12 +68,20 @@ export default function SetupPage() {
     },
   });
 
-  const { fields: socialsFields, append: appendSocial, remove: removeSocial } = useFieldArray({
+  const {
+    fields: socialsFields,
+    append: appendSocial,
+    remove: removeSocial,
+  } = useFieldArray({
     control: form.control,
     name: "socials",
   });
 
-  const { fields: skillsFields, append: appendSkill, remove: removeSkill } = useFieldArray({
+  const {
+    fields: skillsFields,
+    append: appendSkill,
+    remove: removeSkill,
+  } = useFieldArray({
     control: form.control,
     name: "skills",
   });
@@ -83,7 +104,9 @@ export default function SetupPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
-                  <FormControl><Input placeholder="Your Name" {...field} /></FormControl>
+                  <FormControl>
+                    <Input placeholder="Your Name" {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -94,7 +117,9 @@ export default function SetupPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
-                  <FormControl><Input placeholder="email@example.com" {...field} /></FormControl>
+                  <FormControl>
+                    <Input placeholder="email@example.com" {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -105,7 +130,9 @@ export default function SetupPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Phone</FormLabel>
-                  <FormControl><Input placeholder="Your phone number" {...field} /></FormControl>
+                  <FormControl>
+                    <Input placeholder="Your phone number" {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -116,7 +143,9 @@ export default function SetupPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Job</FormLabel>
-                  <FormControl><Input placeholder="Your job title" {...field} /></FormControl>
+                  <FormControl>
+                    <Input placeholder="Your job title" {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -127,7 +156,9 @@ export default function SetupPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Date of Birth</FormLabel>
-                  <FormControl><Input placeholder="YYYY-MM-DD" {...field} /></FormControl>
+                  <FormControl>
+                    <Input placeholder="YYYY-MM-DD" {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -138,7 +169,9 @@ export default function SetupPage() {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Profile Image URL</FormLabel>
-                  <FormControl><Input placeholder="https://..." {...field} /></FormControl>
+                  <FormControl>
+                    <Input placeholder="https://..." {...field} />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
@@ -150,7 +183,9 @@ export default function SetupPage() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Bio</FormLabel>
-                <FormControl><Textarea placeholder="Tell us about yourself" {...field} /></FormControl>
+                <FormControl>
+                  <Textarea placeholder="Tell us about yourself" {...field} />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
@@ -168,7 +203,9 @@ export default function SetupPage() {
                     render={({ field }) => (
                       <FormItem className="flex-1">
                         <FormLabel>Platform Name</FormLabel>
-                        <FormControl><Input placeholder="e.g., Twitter" {...field} /></FormControl>
+                        <FormControl>
+                          <Input placeholder="e.g., Twitter" {...field} />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -179,17 +216,27 @@ export default function SetupPage() {
                     render={({ field }) => (
                       <FormItem className="flex-1">
                         <FormLabel>URL</FormLabel>
-                        <FormControl><Input placeholder="https://..." {...field} /></FormControl>
+                        <FormControl>
+                          <Input placeholder="https://..." {...field} />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button variant="outline" size="sm" onClick={() => removeSocial(index)}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => removeSocial(index)}
+                  >
                     <Trash className="w-4 h-4" />
                   </Button>
                 </div>
               ))}
-              <Button variant="secondary" size="sm" onClick={() => appendSocial({ name: "", url: "" })}>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => appendSocial({ name: "", url: "" })}
+              >
                 <PlusCircle className="w-4 h-4 mr-2" /> Add Social
               </Button>
             </div>
@@ -207,7 +254,9 @@ export default function SetupPage() {
                     render={({ field }) => (
                       <FormItem className="flex-1">
                         <FormLabel>Skill Name</FormLabel>
-                        <FormControl><Input placeholder="e.g., React" {...field} /></FormControl>
+                        <FormControl>
+                          <Input placeholder="e.g., React" {...field} />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -218,17 +267,27 @@ export default function SetupPage() {
                     render={({ field }) => (
                       <FormItem className="flex-1">
                         <FormLabel>Icon URL</FormLabel>
-                        <FormControl><Input placeholder="https://..." {...field} /></FormControl>
+                        <FormControl>
+                          <Input placeholder="https://..." {...field} />
+                        </FormControl>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                  <Button variant="outline" size="sm" onClick={() => removeSkill(index)}>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => removeSkill(index)}
+                  >
                     <Trash className="w-4 h-4" />
                   </Button>
                 </div>
               ))}
-              <Button variant="secondary" size="sm" onClick={() => appendSkill({ name: "", icon_url: "" })}>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => appendSkill({ name: "", icon_url: "" })}
+              >
                 <PlusCircle className="w-4 h-4 mr-2" /> Add Skill
               </Button>
             </div>

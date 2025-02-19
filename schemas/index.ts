@@ -1,24 +1,24 @@
+import type { Project } from "@/types/db";
 import { z } from "zod";
 
 export const idTokenSchema = z.string().min(1, "Invalid token");
 
-export const projectSchema: z.ZodSchema<Omit<Project, "id">> = z.object({
+export const projectSchema = z.object({
   title: z.string().min(1, "Title is required"),
   slug: z.string().min(1, "Slug is required"),
   description: z.string().min(1, "Description is required"),
-  images: z.string().url("Invalid image URL").array().optional(),
-  liveUrl: z.string().url("Invalid live URL").optional(),
-  githubUrl: z.string().url("Invalid GitHub URL").optional(),
+  live_url: z.string().url("Invalid live URL").optional(),
+  github_url: z.string().url("Invalid GitHub URL").optional(),
   tools: z.string().min(1, "At least one tool is required").array(),
-  company: z.string().optional(),
+  company: z.string().nullable(),
   year: z.number().int("Invalid year").positive("Invalid year"),
   media: z.object({
-    type: z.custom<Project["media"]["type"]>((val) =>
+    type: z.custom<NonNullable<Project["media"]>["type"]>((val) =>
       ["link", "image", "video"].includes(val)
     ),
     url: z.string().url(),
   }),
-  featured: z.boolean().default(false).optional(),
+  featured: z.boolean(),
 });
 
 export const projectIdSchema = z.string().min(1, "Project ID is required");

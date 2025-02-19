@@ -11,6 +11,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { useAuth } from "@/context/auth";
+import type { Project } from "@/types/db";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useState } from "react";
@@ -69,15 +70,15 @@ export function ProjectCard({ project }: { project: Project }) {
                 alt={project.title}
                 media={project.media}
                 className="rounded-t-lg object-cover"
-                image={
+                image={(src, alt) => (
                   <Image
-                    src={project.media.url}
-                    alt={project.title}
+                    src={src}
+                    alt={alt}
                     layout="fill"
                     objectFit="cover"
                     className="rounded-t-lg"
                   />
-                }
+                )}
               />
             </div>
             <DialogTitle>
@@ -99,10 +100,10 @@ export function ProjectCard({ project }: { project: Project }) {
             </div>
           </div>
           <div className="flex gap-2">
-            {project.liveUrl && (
+            {project.live_url && (
               <Button asChild>
                 <a
-                  href={project.liveUrl}
+                  href={project.live_url}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -110,10 +111,10 @@ export function ProjectCard({ project }: { project: Project }) {
                 </a>
               </Button>
             )}
-            {project.githubUrl && (
+            {project.github_url && (
               <Button asChild variant="outline">
                 <a
-                  href={project.githubUrl}
+                  href={project.github_url}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

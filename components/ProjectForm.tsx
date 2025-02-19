@@ -2,14 +2,12 @@
 
 "use client";
 
-import { createProject, updateProject } from "@/actions/projects";
 import { Button } from "@/components/ui/button";
 import { projectSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { useAuth } from "../context/auth";
 import Spinner from "./spinner";
 import { Checkbox } from "./ui/checkbox";
 import {
@@ -22,12 +20,13 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
+import type { FullProject } from "@/types/db";
 
 type ProjectFormData = z.infer<typeof projectSchema>;
 
-export function ProjectForm({ project }: { project?: Project }) {
+export function ProjectForm({ project }: { project?: FullProject }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { getIdToken } = useAuth();
+  // const { getIdToken } = useAuth();
 
   const form = useForm<ProjectFormData>({
     resolver: zodResolver(projectSchema),
@@ -36,14 +35,15 @@ export function ProjectForm({ project }: { project?: Project }) {
     },
   });
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   async function onSubmit(data: ProjectFormData) {
     setIsSubmitting(true);
     try {
-      const idToken = await getIdToken();
-      const error = project
-        ? await updateProject(project.id, idToken, data)
-        : await createProject(data, idToken);
-      if (error) throw new Error(error);
+      // const idToken = await getIdToken();
+      // const error = project
+      //   ? await updateProject(project.id, idToken, data)
+      //   : await createProject(data, idToken);
+      // if (error) throw new Error(error);
     } catch (error) {
       // TODO REVEAL ERROR
       // eslint-disable-next-line no-console
@@ -126,7 +126,7 @@ export function ProjectForm({ project }: { project?: Project }) {
         /> */}
         <FormField
           control={form.control}
-          name="liveUrl"
+          name="live_url"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Live URL</FormLabel>
@@ -142,7 +142,7 @@ export function ProjectForm({ project }: { project?: Project }) {
         />
         <FormField
           control={form.control}
-          name="githubUrl"
+          name="github_url"
           render={({ field }) => (
             <FormItem>
               <FormLabel>GitHub URL</FormLabel>

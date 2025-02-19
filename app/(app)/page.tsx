@@ -1,3 +1,4 @@
+import ProjectMedia from "@/components/ProjectMedia";
 import { Button } from "@/components/ui/button";
 import { getSkills } from "@/data";
 import { getFeaturedProjects } from "@/data/projects";
@@ -7,7 +8,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default async function Home() {
-  const [ prefix, name, suffix, image, bio ] = await kv.getAll(
+  const [prefix, name, suffix, image, bio] = await kv.getAll(
     "prefix",
     "suffix",
     "name",
@@ -86,13 +87,15 @@ export default async function Home() {
                 key={project.id}
                 className="bg-card text-card-foreground p-6 rounded-lg shadow-md"
               >
-                <Image
-                  src={project.media.url}
-                  alt={project.title}
-                  width={400}
-                  height={200}
-                  className="rounded-md mb-4"
-                />
+                {project.media && (
+                  <ProjectMedia
+                    media={project.media}
+                    alt={project.title}
+                    height={400}
+                    width={200}
+                    className="rounded-md mb-4"
+                  />
+                )}
                 <h3 className="text-xl font-semibold mb-2">{project.title}</h3>
                 <p className="mb-4">{project.description}</p>
                 <Button asChild>

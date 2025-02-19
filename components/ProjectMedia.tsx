@@ -1,3 +1,4 @@
+import type { Project } from "@/types/db";
 import Image from "next/image";
 import type { FC, ReactNode } from "react";
 
@@ -7,7 +8,7 @@ type props = {
   height: number;
   className: string;
   media: Project["media"];
-  image?: ReactNode;
+  image?: (src: string, alt: string) => ReactNode;
 };
 
 const ProjectMedia: FC<props> = ({
@@ -18,18 +19,19 @@ const ProjectMedia: FC<props> = ({
   alt,
   image,
 }) => {
+  if (!media) return null;
   switch (media.type) {
     case "image":
-      return (
-        image ?? (
-          <Image
-            src={media.url}
-            alt={alt}
-            width={width}
-            height={height}
-            className={className}
-          />
-        )
+      return image ? (
+        image(media.url, alt)
+      ) : (
+        <Image
+          src={media.url}
+          alt={alt}
+          width={width}
+          height={height}
+          className={className}
+        />
       );
     case "video":
       return (
@@ -40,7 +42,7 @@ const ProjectMedia: FC<props> = ({
           className={className}
         />
       );
-    case "link":
+    case "external":
       return (
         <iframe
           width={width}

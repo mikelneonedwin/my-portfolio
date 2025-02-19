@@ -5,8 +5,6 @@ import {
   type AppOptions,
 } from "firebase-admin/app";
 import { getAuth } from "firebase-admin/auth";
-import { getDatabase } from "firebase-admin/database";
-import { getFirestore } from "firebase-admin/firestore";
 import { getStorage } from "firebase-admin/storage";
 
 const adminConfig: AppOptions = {
@@ -21,10 +19,5 @@ const adminConfig: AppOptions = {
 
 const app = getApps().length ? getApps()[0] : initializeApp(adminConfig);
 
-const adminAuth = getAuth(app);
-const adminDb = getFirestore(app);
-const adminStorage = getStorage(app);
-const adminKv = getDatabase(app);
-const kvRef = (path: DbPaths) => adminKv.ref(path);
-
-export { adminAuth, adminDb, adminKv, adminStorage, kvRef };
+export const adminAuth = getAuth(app);
+export const adminStorage = getStorage(app);
