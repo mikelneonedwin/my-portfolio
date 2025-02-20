@@ -41,3 +41,9 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+*.log
+.firebaserc
+*.rules
+database.rules.json
+firebase.json
+firestore.indexes.json

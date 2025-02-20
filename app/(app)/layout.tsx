@@ -1,6 +1,6 @@
 import { Footer } from "@/components/Footer";
 import { Header } from "@/components/Header";
-import { kv } from "@/lib/redis";
+import { kv } from "@/lib/kv";
 import { Suspense, type ReactNode } from "react";
 
 export default async function AppLayout({ children }: { children: ReactNode }) {

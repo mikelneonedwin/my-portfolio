@@ -2,7 +2,7 @@
 
 import { HAS_SESSION_COOKIE, SESSION_COOKIE } from "@/constants";
 import { adminAuth } from "@/lib/firebase-admin";
-import { kv } from "@/lib/redis";
+import { kv } from "@/lib/kv";
 import { idTokenSchema } from "@/schemas";
 import { getErrorMessage } from "@/utils/shared";
 import { waitUntil } from "@vercel/functions";

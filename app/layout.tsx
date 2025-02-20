@@ -1,10 +1,8 @@
 import { Toaster } from "@/components/ui/toaster";
-import { TESTING } from "@/constants";
 import { AuthProvider } from "@/context/auth";
 import { ThemeProvider } from "@/context/theme-provider";
-import { kv } from "@/lib/redis";
+import { kv } from "@/lib/kv";
 import { getSite } from "@/utils/shared";
-import { faker } from "@faker-js/faker";
 import { Analytics } from "@vercel/analytics/react";
 import clsx from "clsx";
 import type { Metadata } from "next";
@@ -20,9 +18,7 @@ const poppins = Poppins({
 });
 
 export async function generateMetadata(): Promise<Metadata> {
-  const [name, image, job] = TESTING
-    ? [faker.person.fullName(), faker.image.avatar(), faker.person.jobTitle()]
-    : await kv.getAll("name", "image", "job");
+  const [name, image, job] = await kv.getAll("name", "image", "job");
   // FIXME
   const twitterUsername = null; //await getTwitterUsername();
   const siteName = name ? `${name} - Portfolio` : "Portfolio";

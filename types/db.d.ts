@@ -6,7 +6,7 @@ import type {
   Updateable,
 } from "kysely";
 
-interface SkillsTable {
+export interface SkillsTable {
   id: Generated<number>;
   name: string;
   icon_url: string | null;
@@ -20,7 +20,7 @@ export type OnlinePlatform =
   | typeof import("@/constants")["PLATFORMS"][number]
   | (string & {});
 
-interface SocialsTable {
+export interface SocialsTable {
   id: Generated<number>;
   name: OnlinePlatform;
   url: string;
@@ -30,7 +30,7 @@ export type Social = Selectable<SocialsTable>;
 export type NewSocial = Insertable<SocialsTable>;
 export type UpdateSocial = Updateable<SocialsTable>;
 
-interface ProjectsTable {
+export interface ProjectsTable {
   id: Generated<string>;
   title: string;
   description: string;
@@ -54,11 +54,14 @@ export type FullProject = Project & {
 export type NewProject = Insertable<ProjectsTable>;
 export type UpdateProject = Updateable<ProjectsTable>;
 
-interface ImagesTable {
+export interface ImagesTable {
   id: Generated<number>;
   project_id: string;
   url: string;
 }
+
+export type NewImage = Insertable<ImagesTable>;
+export type Image = Selectable<ImagesTable>;
 
 export interface Database {
   skills: SkillsTable;

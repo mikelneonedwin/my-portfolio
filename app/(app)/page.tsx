@@ -2,7 +2,7 @@ import ProjectMedia from "@/components/ProjectMedia";
 import { Button } from "@/components/ui/button";
 import { getSkills } from "@/data";
 import { getFeaturedProjects } from "@/data/projects";
-import { kv } from "@/lib/redis";
+import { kv } from "@/lib/kv";
 import clsx from "clsx";
 import Image from "next/image";
 import Link from "next/link";

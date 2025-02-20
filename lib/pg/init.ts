@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import chalk from "chalk";
 import "dotenv/config";
-import { db } from ".";
+import { pg } from "./index";
 
 void initDatabase();
 
@@ -11,7 +11,7 @@ async function initDatabase(): Promise<void> {
 
     // Create "skills" table first
     console.log(chalk.blue("Creating table: skills"));
-    await db.schema
+    await pg.schema
       .createTable("skills")
       .ifNotExists()
       .addColumn("id", "serial", (col) => col.primaryKey())
@@ -22,7 +22,7 @@ async function initDatabase(): Promise<void> {
 
     // Create "socials" table
     console.log(chalk.blue("Creating table: socials"));
-    await db.schema
+    await pg.schema
       .createTable("socials")
       .ifNotExists()
       .addColumn("id", "serial", (col) => col.primaryKey())
@@ -33,12 +33,12 @@ async function initDatabase(): Promise<void> {
 
     // Create "projects" table
     console.log(chalk.blue("Creating table: projects"));
-    await db.schema
+    await pg.schema
       .createTable("projects")
       .ifNotExists()
       // Using uuid type with default value; adjust generator per your PostgreSQL setup
       .addColumn("id", "uuid", (col) =>
-        col.primaryKey().defaultTo(db.fn("gen_random_uuid"))
+        col.primaryKey().defaultTo(pg.fn("gen_random_uuid"))
       )
       .addColumn("title", "text", (col) => col.notNull())
       .addColumn("description", "text", (col) => col.notNull())
@@ -55,7 +55,7 @@ async function initDatabase(): Promise<void> {
 
     // Create "images" table (dependent on projects.id)
     console.log(chalk.blue("Creating table: images"));
-    await db.schema
+    await pg.schema
       .createTable("images")
       .ifNotExists()
       .addColumn("id", "serial", (col) => col.primaryKey())
@@ -70,7 +70,7 @@ async function initDatabase(): Promise<void> {
       chalk.green.bold("Database initialization completed successfully.")
     );
 
-    await db.destroy();
+    await pg.destroy();
   } catch (error) {
     console.error(chalk.red("Error during database initialization:"), error);
     throw error;

@@ -1,6 +1,5 @@
 export const HAS_SESSION_COOKIE = "has-session";
 export const SESSION_COOKIE = "session";
-export const TESTING = Boolean(process.env.TESTING);
 export const PLATFORMS = [
   "Audiomack",
   "Daily.dev",
@@ -41,3 +40,6 @@ export const SITE =
   process.env.RAILWAY_PUBLIC_DOMAIN ||
   // CLOUDFLARE
   process.env.CF_PAGES_URL;
+
+export const NODE_ENV =
+  process.env.NODE_ENV === "development" ? "development" : "production";

@@ -1,5 +1,5 @@
 import git from "@/lib/git";
-import { kv } from "@/lib/redis";
+import { kv } from "@/lib/kv";
 import { Github, Mail } from "lucide-react";
 import Link from "next/link";
 
