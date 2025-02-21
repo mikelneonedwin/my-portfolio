@@ -36,7 +36,7 @@ if (NODE_ENV === "development") {
   process.env.FIREBASE_STORAGE_EMULATOR_HOST = "127.0.0.1:9199";
 }
 
-export function adminDbCollection<T extends keyof Database>(group: T) {
+export function dbCollection<T extends keyof Database>(group: T) {
   type AppModel = Selectable<Database[T]>;
   type DbModel = Insertable<Database[T]>;
   const converted = adminDb.collection(group).withConverter<AppModel, DbModel>({
@@ -50,6 +50,7 @@ export function adminDbCollection<T extends keyof Database>(group: T) {
   return {
     get: () => converted.get(),
     doc: (...args: Parameters<typeof converted.doc>) => converted.doc(...args),
+    add: (...args: Parameters<typeof converted.add>) => converted.add(...args),
     where<K extends Extract<keyof AppModel, string>>(
       key: K,
       opStr: WhereFilterOp,

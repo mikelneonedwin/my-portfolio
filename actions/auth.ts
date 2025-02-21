@@ -2,11 +2,10 @@
 
 import { HAS_SESSION_COOKIE, SESSION_COOKIE, SITE } from "@/constants";
 import { adminAuth } from "@/lib/firebase-admin";
-import { kv } from "@/lib/kv";
 import { authorize } from "@/utils/server";
 import { serverErrorMessage } from "@/utils/server/errors";
 import { errorMessage } from "@/utils/shared";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
@@ -53,12 +52,21 @@ export async function deleteSession() {
 
 export async function sendMagicLinkToAdmin() {
   try {
+    const header = await headers();
     // TODO Zod error is no email exists in the kv
-    const kvEmail = await kv.get("email");
-    const email = await z.string().email().parseAsync(kvEmail);
+    // const kvEmail = await kv.get("email");
+    const kvEmail = "test@email.com";
+    const email = await z
+      .string({
+        invalid_type_error: "No email address in configuration",
+      })
+      .email("Invalid email address stored in configuration")
+      .parseAsync(kvEmail);
     // TODO check headers for url
-    await adminAuth.generateSignInWithEmailLink(email, {
-      url: `${SITE}/auth/callback?email=${encodeURIComponent(email)}`,
+    const url = `${header.get("origin") || SITE}/auth/callback`;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const signInUrl = await adminAuth.generateSignInWithEmailLink(email, {
+      url,
       handleCodeInApp: true,
     });
   } catch (error) {

@@ -1,5 +1,5 @@
 import { NODE_ENV } from "@/constants";
-import { adminDbCollection } from "@/lib/firebase-admin";
+import { dbCollection } from "@/lib/firebase-admin";
 import { pg } from "@/lib/pg";
 import type { FullProject, Image, Project } from "@/types/db";
 import "server-only";
@@ -7,7 +7,7 @@ import "server-only";
 async function fetchImagesForProject(projectId: string): Promise<Image[]> {
   switch (NODE_ENV) {
     case "development": {
-      const snapshot = await adminDbCollection("images")
+      const snapshot = await dbCollection("images")
         .where("project_id", "==", projectId)
         .get();
       return snapshot.docs.map((doc) => doc.data());
@@ -25,7 +25,7 @@ async function fetchImagesForProject(projectId: string): Promise<Image[]> {
 export async function getFeaturedProjects(): Promise<Project[]> {
   switch (NODE_ENV) {
     case "development":
-      const snapshot = await adminDbCollection("projects")
+      const snapshot = await dbCollection("projects")
         .where("featured", "==", true)
         .get();
       return snapshot.docs.map((doc) => doc.data());
@@ -41,7 +41,7 @@ export async function getFeaturedProjects(): Promise<Project[]> {
 export async function getProjects(): Promise<FullProject[]> {
   switch (NODE_ENV) {
     case "development":
-      const projectsSnapshot = await adminDbCollection("projects").get();
+      const projectsSnapshot = await dbCollection("projects").get();
       return await Promise.all(
         projectsSnapshot.docs.map(async (doc): Promise<FullProject> => {
           const project = doc.data();
@@ -72,7 +72,7 @@ export async function getProjects(): Promise<FullProject[]> {
 export async function getProjectBySlug(slug: string): Promise<FullProject> {
   switch (NODE_ENV) {
     case "development": {
-      const snapshot = await adminDbCollection("projects")
+      const snapshot = await dbCollection("projects")
         .where("slug", "==", slug)
         .limit(1)
         .get();
@@ -109,7 +109,7 @@ export async function getProjectBySlug(slug: string): Promise<FullProject> {
 export async function getProjectSlugs(): Promise<Array<{ slug: string }>> {
   switch (NODE_ENV) {
     case "development":
-      const snapshot = await adminDbCollection("projects").get();
+      const snapshot = await dbCollection("projects").get();
       return snapshot.docs.map((doc) => {
         const project = doc.data();
         return { slug: project.slug };

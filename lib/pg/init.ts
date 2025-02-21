@@ -28,6 +28,7 @@ async function initDatabase(): Promise<void> {
       .addColumn("id", "serial", (col) => col.primaryKey())
       .addColumn("name", "text", (col) => col.notNull())
       .addColumn("url", "text", (col) => col.notNull())
+      .addColumn("slug", "text", (col) => col.notNull())
       .execute();
     console.log(chalk.green("Table 'socials' created."));
 

@@ -24,6 +24,7 @@ export interface SocialsTable {
   id: Generated<number>;
   name: OnlinePlatform;
   url: string;
+  slug: string;
 }
 
 export type Social = Selectable<SocialsTable>;

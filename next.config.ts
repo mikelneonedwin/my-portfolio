@@ -28,14 +28,10 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     typedEnv: true,
-    authInterrupts: true,
     serverActions: {
       bodySizeLimit: "10mb",
     },
   },
-  serverRuntimeConfig: {
-    
-  }
 };
 
 export default nextConfig;

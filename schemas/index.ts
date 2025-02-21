@@ -28,3 +28,5 @@ export const platformSchema = z
   .string()
   .min(1, "A social media platform is required");
 export const socialUrlSchema = z.string().url("Invalid social media link");
+
+export const serialIdSchema = z.number().int().nonnegative();
