@@ -64,11 +64,12 @@ export async function sendMagicLinkToAdmin() {
       .parseAsync(kvEmail);
     // TODO check headers for url
     const url = `${header.get("origin") || SITE}/auth/callback`;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const signInUrl = await adminAuth.generateSignInWithEmailLink(email, {
       url,
       handleCodeInApp: true,
     });
+    // eslint-disable-next-line no-console
+    console.log(signInUrl);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error("Error sending magic link:", error);
