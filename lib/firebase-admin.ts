@@ -49,6 +49,7 @@ export function adminDbCollection<T extends keyof Database>(group: T) {
   });
   return {
     get: () => converted.get(),
+    doc: (...args: Parameters<typeof converted.doc>) => converted.doc(...args),
     where<K extends Extract<keyof AppModel, string>>(
       key: K,
       opStr: WhereFilterOp,

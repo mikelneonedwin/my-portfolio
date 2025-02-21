@@ -88,6 +88,7 @@ export default function SetupPage() {
 
   async function onSubmit(data: SetupFormData) {
     // Wire up your data persistence here (e.g. call an API or database action)
+    // eslint-disable-next-line no-console
     console.log("Setup data submitted:", data);
   }
 

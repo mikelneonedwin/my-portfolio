@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 import { useAuth } from "@/context/auth";
 import { useToast } from "@/hooks/use-toast";
-import { getErrorMessage } from "@/utils/shared";
+import { errorMessage } from "@/utils/shared";
 import { Github } from "lucide-react";
 import { useState } from "react";
 
@@ -29,7 +29,7 @@ export default function LoginPage() {
       toast({
         title: "Uh oh! Something went wrong.",
         variant: "destructive",
-        description: getErrorMessage(error),
+        description: errorMessage(error),
       });
       setLoading(false);
       setActiveProvider(null);
@@ -115,3 +115,40 @@ export default function LoginPage() {
     </main>
   );
 }
+
+/*
+"use client";
+
+import { useState } from "react";
+
+export default function MagicLinkLogin() {
+  const [email, setEmail] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSendLink = async () => {
+    const formData = new FormData();
+    formData.append("email", email);
+
+    const res = await fetch("/actions/auth", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+    setMessage(data.success ? "Check your email for the magic link!" : data.error);
+  };
+
+  return (
+    <div>
+      <input
+        type="email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="Enter your email"
+      />
+      <button onClick={handleSendLink}>Send Magic Link</button>
+      <p>{message}</p>
+    </div>
+  );
+}
+*/

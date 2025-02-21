@@ -23,6 +23,7 @@ const eslintConfig = [
     rules: {
       "no-console": "warn",
       "@typescript-eslint/no-floating-promises": "error",
+      "no-fallthrough": "error"
     },
   },
 ];

@@ -7,3 +7,5 @@
 - Add option to use photo from socials as display photo
 - Email and Password Auth
 - Vercel/functions
+- Magic links in firebase
+- Husky

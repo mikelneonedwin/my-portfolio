@@ -1,8 +1,30 @@
+import { SESSION_COOKIE } from "@/constants";
 import { adminAuth } from "@/lib/firebase-admin";
-import { kv } from "@/lib/kv";
+import { idTokenSchema } from "@/schemas";
+import { cookies } from "next/headers";
+import "server-only";
 
+/**
+ * Verify user's id token and check the current session for validity
+ * @param idToken
+ */
 export async function authorize(idToken: string) {
-  const { email } = await adminAuth.verifyIdToken(idToken);
-  const myEmail = await kv.get("email");
-  if (myEmail !== email) throw new Error("Unauthorized!");
+  idTokenSchema.parse(idToken);
+
+  const cookie = await cookies();
+  const sessionCookie = cookie.get(SESSION_COOKIE);
+
+  if (!sessionCookie) throw new Error("Unauthorized!");
+
+  const [tokenResult, cookieResult] = await Promise.all([
+    await adminAuth.verifyIdToken(idToken),
+    await adminAuth.verifySessionCookie(sessionCookie.value),
+  ]);
+
+  if (
+    !tokenResult.email ||
+    !cookieResult.email ||
+    tokenResult.email !== cookieResult.email
+  )
+    throw new Error("Unauthorized!");
 }

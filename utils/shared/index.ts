@@ -1,23 +1,29 @@
 import { SITE } from "@/constants";
+import { FirebaseError } from "firebase/app";
+import { FirestoreError } from "firebase/firestore";
+import { StorageError } from "firebase/storage";
+import { z } from "zod";
 
-export function getErrorMessage(error: unknown): string {
-  if (error instanceof Error) {
-    return `${error.name}: ${error.message}`;
+const formatZodError = (error: z.ZodError): string => {
+  const messages = error.errors.map((err) => {
+    const path = err.path.join(".");
+    return path ? `${path}: ${err.message}` : err.message;
+  });
+
+  return `Validation failed: ${messages.join(", ")}`;
+};
+
+export function errorMessage(error: unknown): string {
+  if (error instanceof z.ZodError) return formatZodError(error);
+  if (error instanceof FirebaseError) {
   }
-
-  if (typeof error === "string") {
-    return `Error: ${error}`;
+  if (error instanceof FirestoreError) {
   }
-
-  if (typeof error === "object" && error !== null) {
-    try {
-      return `Error: ${JSON.stringify(error, null, 2)}`;
-    } catch {
-      return "Error: [Unserializable Object]";
-    }
+  if (error instanceof StorageError) {
   }
-
-  return `Error: ${String(error).replaceAll("Error: ", "")}`;
+  if (error instanceof Error) return error.message;
+  if (typeof error === "string") return error;
+  return "An unknown error occurred";
 }
 
 export function getSite() {
