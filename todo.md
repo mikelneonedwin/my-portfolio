@@ -9,3 +9,4 @@
 - Vercel/functions
 - Magic links in firebase
 - Husky
+- Setup local posgtres and redis clients

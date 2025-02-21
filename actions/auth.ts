@@ -1,18 +1,22 @@
 "use server";
 
 import { HAS_SESSION_COOKIE, SESSION_COOKIE, SITE } from "@/constants";
+import { auth } from "@/lib/firebase";
 import { adminAuth } from "@/lib/firebase-admin";
-import { authorize } from "@/utils/server";
+import { idTokenSchema } from "@/schemas";
 import { serverErrorMessage } from "@/utils/server/errors";
 import { errorMessage } from "@/utils/shared";
+import { sendSignInLinkToEmail } from "firebase/auth";
 import { cookies, headers } from "next/headers";
+import { redirect } from "next/navigation";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
-export async function createSession(idToken: string): Promise<string | null> {
+export async function createSession(idToken: string) {
   try {
-    await authorize(idToken);
+    await idTokenSchema.parseAsync(idToken);
     // allow session for an hour
+    await adminAuth.verifyIdToken(idToken);
     const expiresIn = 60 * 60;
     const sessionCookie = await adminAuth.createSessionCookie(idToken, {
       expiresIn: expiresIn * 1000,
@@ -36,12 +40,12 @@ export async function createSession(idToken: string): Promise<string | null> {
       path: "/",
       sameSite: "strict",
     });
-    return null;
   } catch (err) {
     // eslint-disable-next-line no-console
     console.error("Error creating session:", err);
     return errorMessage(err);
   }
+  redirect("/");
 }
 
 export async function deleteSession() {
@@ -53,26 +57,32 @@ export async function deleteSession() {
 export async function sendMagicLinkToAdmin() {
   try {
     const header = await headers();
-    // TODO Zod error is no email exists in the kv
-    // const kvEmail = await kv.get("email");
-    const kvEmail = "test@email.com";
-    const email = await z
-      .string({
-        invalid_type_error: "No email address in configuration",
-      })
-      .email("Invalid email address stored in configuration")
-      .parseAsync(kvEmail);
+    const email = await getAdminEmail();
     // TODO check headers for url
-    const url = `${header.get("origin") || SITE}/login/auth/callback`;
-    const signInUrl = await adminAuth.generateSignInWithEmailLink(email, {
-      url,
+    const redirectUrl = `${header.get("origin") || SITE}/login/auth/callback?email=${email}`;
+    await sendSignInLinkToEmail(auth, email, {
+      url: redirectUrl,
       handleCodeInApp: true,
     });
-    // eslint-disable-next-line no-console
-    console.log(signInUrl);
+    // const signInUrl = await adminAuth.generateSignInWithEmailLink(email, {
+    //   url,
+    //   handleCodeInApp: true,
+    // });
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error("Error sending magic link:", error);
     return serverErrorMessage(error);
   }
+}
+
+export async function getAdminEmail() {
+  // TODO Zod error is no email exists in the kv
+  // const kvEmail = await kv.get("email");
+  const kvEmail = "test@email.com";
+  return await z
+    .string({
+      invalid_type_error: "No email address in configuration",
+    })
+    .email("Invalid email address stored in configuration")
+    .parseAsync(kvEmail);
 }

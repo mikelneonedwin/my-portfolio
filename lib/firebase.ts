@@ -1,3 +1,4 @@
+import { NODE_ENV } from "@/constants";
 import { initializeApp, type FirebaseOptions } from "firebase/app";
 import { connectAuthEmulator, getAuth } from "firebase/auth";
 import { connectFirestoreEmulator, getFirestore } from "firebase/firestore";
@@ -20,11 +21,3 @@ const db = getFirestore(app);
 const storage = getStorage(app);
 
 export { app, auth, db, storage };
-
-if (process.env.NODE_ENV === "development") {
-  connectAuthEmulator(auth, "http://127.0.0.1:9099", {
-    disableWarnings: true,
-  });
-  connectFirestoreEmulator(db, "127.0.0.1", 8080);
-  connectStorageEmulator(storage, "127.0.0.1", 9199);
-}

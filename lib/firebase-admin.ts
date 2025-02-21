@@ -1,4 +1,3 @@
-import { NODE_ENV } from "@/constants";
 import type { Database, KvMapper } from "@/types/db";
 import type { Kv, MgetReturn } from "@/types/kv";
 import {
@@ -29,12 +28,6 @@ export const adminAuth = getAuth(app);
 export const adminStorage = getStorage(app);
 export const adminDb = getFirestore(app);
 export const database = getDatabase(app);
-
-if (NODE_ENV === "development") {
-  process.env.FIREBASE_AUTH_EMULATOR_HOST = "http://127.0.0.1:9099";
-  process.env.FIREBASE_DATABASE_EMULATOR_HOST = "127.0.0.1:9000";
-  process.env.FIREBASE_STORAGE_EMULATOR_HOST = "127.0.0.1:9199";
-}
 
 export function dbCollection<T extends keyof Database>(group: T) {
   type AppModel = Selectable<Database[T]>;
