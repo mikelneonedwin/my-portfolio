@@ -63,7 +63,7 @@ export async function sendMagicLinkToAdmin() {
       .email("Invalid email address stored in configuration")
       .parseAsync(kvEmail);
     // TODO check headers for url
-    const url = `${header.get("origin") || SITE}/auth/callback`;
+    const url = `${header.get("origin") || SITE}/login/auth/callback`;
     const signInUrl = await adminAuth.generateSignInWithEmailLink(email, {
       url,
       handleCodeInApp: true,

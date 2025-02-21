@@ -48,3 +48,5 @@ database.rules.json
 firebase.json
 firestore.indexes.json
 note.*
+.firebase
+firebase-export*
