@@ -7,9 +7,9 @@ import { auth } from "@/lib/firebase";
 import { signInWithEmailLink } from "firebase/auth";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 
-export default function AuthCallback() {
+ function AuthCallback() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email =
@@ -32,4 +32,12 @@ export default function AuthCallback() {
   }, [email, router]);
 
   return <p>Authenticating...</p>;
+}
+
+export default function CallbackPage(){
+  return (
+    <Suspense>
+      <AuthCallback/>
+    </Suspense>
+  )
 }
