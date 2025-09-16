@@ -10,3 +10,7 @@
 - Magic links in firebase
 - Husky
 - Setup local posgtres and redis clients
+- Rename main to v1
+- Change v2 to main
+- Set v2 as main branch
+- Setup framer-motion animations
